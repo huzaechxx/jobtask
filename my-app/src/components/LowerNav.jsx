@@ -239,7 +239,7 @@ const LowerNav = () => {
           px: 1.5,
           color: "white",
           position: "relative",
-          left: "37.2%",
+          left: "32%",
         }}
       >
         Contact IBM Consulting
