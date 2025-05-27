@@ -1,13 +1,19 @@
-import { Box, Typography, Button } from "@mui/material";
+import React from "react";
+import { Box, Typography, Button, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 const Home = () => {
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMd = useMediaQuery(theme.breakpoints.down("md"));
+
   const cards = [
     {
       title: "Expertly crafted solutions with global reach",
       description:
         "Our procurement and supply chain processes enhance operations for your organization’s success.",
       linkText: "Let's Co-Create",
-      linkUrl: "#", // Update with actual URL if needed
+      linkUrl: "#",
     },
     {
       title: "Strategic, collaborative, and driven",
@@ -31,10 +37,10 @@ const Home = () => {
       sx={{
         height: "84vh",
         overflowY: "auto",
-        scrollbarWidth: "none", // Firefox
-        msOverflowStyle: "none", // IE/Edge
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
         "&::-webkit-scrollbar": {
-          display: "none", // Chrome/Safari
+          display: "none",
         },
       }}
     >
@@ -45,83 +51,118 @@ const Home = () => {
           backgroundImage: 'url("/Magazine cover.png")',
           backgroundSize: "cover",
           backgroundPosition: "center",
-          height: 950,
+          height: isSm ? 1200 : isMd ? 850 : 850, // reduce height on smaller screens
           width: "100%",
         }}
       >
-        <Box>
-          <Box width={"40%"}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-90%, -80%)",
-                width: "37%",
-              }}
-            >
-              <Typography sx={{ color: "white", fontSize: 30 }}>
-                1IGS exemplifies its dedication to sustainability through
-                innovative procurement and supply chain practices that boost
-                operational efficiency and drive industry-leading innovation
-              </Typography>{" "}
-              <Typography sx={{ color: "white", fontSize: 14, paddingTop: 2 }}>
-                1IGS is committed to delivery high quality products on time,
-                everytime
-              </Typography>{" "}
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: "white",
-                  color: "dodgerblue",
-                  marginTop: 2,
-                }}
-              >
-                Book A Meeting
-              </Button>
-            </Box>
-            {/* Overlay Image */}
-            <Box
-              component="img"
-              src="/banner-images.png"
-              alt="Overlay"
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "78%",
-                transform: "translate(-50%, -50%)",
-                width: 700,
-              }}
-            />
-          </Box>
+        <Box sx={{ position: "relative", height: "100%" }}>
+          {/* Text container */}
           <Box
             sx={{
               position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, 250%)",
-              width: "70%",
-              gap: 5,
+              top: isSm ? "40%" : isMd ? "30%" : "40%",
+              left: isSm ? "10%" : isMd ? "25%" : "60%",
+              transform: isSm
+                ? "translate(0%, -200%)"
+                : isMd
+                ? "translate(-40%, -50%)"
+                : "translate(-90%, -80%)",
+              width: isSm ? "90%" : isMd ? "50%" : "50%",
+              color: "white",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: isSm ? 20 : isMd ? 24 : 30,
+                fontWeight: "bold",
+
+                mb: 2,
+              }}
+            >
+              1IGS exemplifies its dedication to sustainability through
+              innovative procurement and supply chain practices that boost
+              operational efficiency and drive industry-leading innovation
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: isSm ? 12 : 14,
+                mb: 3,
+              }}
+            >
+              1IGS is committed to delivery high quality products on time,
+              everytime
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "white",
+                color: "dodgerblue",
+                "&:hover": {
+                  backgroundColor: "#f0f0f0",
+                },
+              }}
+            >
+              Book A Meeting
+            </Button>
+          </Box>
+
+          {/* Overlay Image */}
+          <Box
+            component="img"
+            src="/banner-images.png"
+            alt="Overlay"
+            sx={{
+              position: "absolute",
+              top: isSm ? "25%" : isMd ? "40%" : "50%",
+              left: isSm ? "50%" : isMd ? "25%" : "55%",
+              transform: "translate(60%, -50%)",
+              width: isSm ? "30%" : isMd ? 400 : 400,
+              maxWidth: "90vw",
+              height: "auto",
+            }}
+          />
+
+          {/* Cards section */}
+          <Box
+            sx={{
+              position: "absolute",
+              top: isSm ? "35%" : isMd ? "-50%" : "35%",
+              left: isSm ? "50%" : isMd ? "20%" : "50%",
+              transform: isSm ? "translate(-50%, 0%)" : "translate(-50%, 250%)",
+              width: isSm ? "35%" : isMd ? "10%" : "70%",
+              gap: 3,
               display: "flex",
-              alignItems: "center",
+              flexDirection: isSm ? "column" : "row",
+              alignItems: isSm ? "stretch" : "center",
             }}
           >
             {cards.map((card, index) => (
               <Box
                 sx={{
-                  backgroundColor: "rgba(255, 255, 255, 0.15)", // translucent white
-                  width: "100%",
+                  backgroundColor: "rgba(255, 255, 255, 0.15)",
+                  flex: isSm ? "unset" : "1 1 0",
                   borderRadius: 1,
-                  px: 5,
-                  py: 1,
+                  px: isSm ? 2 : 5,
+                  py: 2,
+                  mb: isSm ? 2 : 0,
+                  color: "white",
+                  boxShadow: "0 0 10px rgba(0,0,0,0.2)",
                 }}
                 key={index}
               >
-                <h3 style={{ color: "white" }}>{card.title}</h3>
-                <p style={{ color: "white", fontSize: 12, marginTop: 15 }}>
+                <Typography sx={{ mb: 1, fontSize: isSm ? 5 : isMd ? 15 : 10 }}>
+                  {card.title}
+                </Typography>
+                <Typography
+                  sx={{ fontSize: 12, mb: 1, lineHeight: 1.4 }}
+                  component="p"
+                >
                   {card.description}
-                </p>
-                <a href={card.linkUrl} style={{ color: "orangered" }}>
+                </Typography>
+                <a
+                  href={card.linkUrl}
+                  style={{ color: "orangered", textDecoration: "none" }}
+                >
                   {card.linkText}
                 </a>
               </Box>

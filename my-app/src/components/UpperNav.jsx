@@ -66,6 +66,26 @@ const UpperNav = () => {
     },
     { title: "Think", options: null },
   ];
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeTab, setActiveTab] = useState(null);
+
+  const handleClick = (event, index) => {
+    // Toggle the dropdown only if it's not tab 3 or 5
+    if (index === 3 || index === 5) return;
+
+    if (anchorEl && activeTab === index) {
+      setAnchorEl(null);
+      setActiveTab(null);
+    } else {
+      setAnchorEl(event.currentTarget);
+      setActiveTab(index);
+    }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setActiveTab(null);
+  };
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -159,21 +179,33 @@ const UpperNav = () => {
 
       {/* Tabs */}
       <Box sx={{ display: "flex", flexGrow: 1 }}>
-        {uppertabs.map((tab, index) => (
-          <Box
-            key={index}
-            sx={{
-              px: 2,
-              py: 1,
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            <Typography sx={{ color: "grey" }}>{tab.title}</Typography>
-            {tab.options && <ArrowDropDownIcon fontSize="small" />}
-          </Box>
-        ))}
+        {uppertabs.map((tab, index) => {
+          const isDropdown = index !== 3 && index !== 5;
+          const isActive = activeTab === index;
+          return (
+            <Box
+              key={index}
+              onClick={(e) => handleClick(e, index)}
+              sx={{
+                px: 2,
+                py: 1,
+                display: "flex",
+                alignItems: "center",
+                color: "black",
+                fontWeight: 500,
+                cursor: isDropdown ? "pointer" : "default",
+                "&:hover": {
+                  backgroundColor: isDropdown ? "#e0e0e0" : "transparent",
+                },
+                borderRadius: 1,
+                position: "relative",
+              }}
+            >
+              <Typography sx={{ color: "grey" }}>{tab.title}</Typography>
+              {isDropdown && <ArrowDropDownIcon fontSize="small" />}
+            </Box>
+          );
+        })}
       </Box>
 
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, pr: 3 }}>
@@ -181,6 +213,72 @@ const UpperNav = () => {
         <LanguageIcon sx={{ cursor: "pointer" }} />
         <AccountCircleIcon sx={{ cursor: "pointer" }} />
       </Box>
+      {/* Full-width Dropdown Panel */}
+      <Popper
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        placement="bottom-start"
+        disablePortal
+        modifiers={[
+          {
+            name: "offset",
+            options: {
+              offset: [0, 0],
+            },
+          },
+        ]}
+        sx={{
+          zIndex: 200,
+          width: "100vw",
+          left: 0,
+        }}
+      >
+        <ClickAwayListener onClickAway={handleClose}>
+          <Paper
+            sx={{
+              mt: 1,
+              p: 2,
+              width: "100%",
+              backgroundColor: "white",
+              borderRadius: 0,
+            }}
+          >
+            {activeTab !== null && (
+              <>
+                <Typography fontWeight="bold" gutterBottom>
+                  {uppertabs[activeTab]?.title} Options
+                </Typography>
+                <Box
+                  display="flex"
+                  flexWrap="wrap" // ✅ Enables wrapping
+                  alignItems="flex-start"
+                  width="80%"
+                  gap={2} // optional spacing between boxes
+                >
+                  {uppertabs[activeTab]?.options?.map((option, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        flex: "1 1 250px", // ✅ Responsive width
+                        padding: 1,
+                        borderRadius: 1,
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{ display: "flex", alignItems: "center" }}
+                      >
+                        {option}
+                        <Arrow />
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </>
+            )}
+          </Paper>
+        </ClickAwayListener>
+      </Popper>
     </Box>
   );
 };
